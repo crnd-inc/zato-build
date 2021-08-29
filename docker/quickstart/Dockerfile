@@ -24,7 +24,10 @@ RUN apt-get update && apt-get install -y \
     vim \
     libpq-dev \
     gnupg \
-    whois
+    whois \
+    libsasl2-dev \
+    libldap2-dev \
+    libssl-dev
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/* && apt-get update -y
