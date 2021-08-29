@@ -24,7 +24,10 @@ RUN apt-get update && apt-get install -y \
     vim \
     libpq-dev \
     gnupg \
-    whois
+    whois \
+    libsasl2-dev \
+    libldap2-dev \
+    libssl-dev
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/* && apt-get update -y
@@ -37,13 +40,13 @@ RUN add-apt-repository universe
 RUN curl -s https://zato.io/repo/zato-3.2-48849AAD40BCBB0E.pgp.txt | sudo apt-key add -
 
 # Add Zato repo and install the package
-# update sources and install Zato
-# ENV ZATO_PY_VERSION=$zato_py_version
-RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main" && apt-get update && apt-get install -y zato
+RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main"
+RUN apt-get update
+RUN apt-get install -y zato
 
-# Install latest updates
+# Install latest Zato updates
 WORKDIR /opt/zato/current
-RUN git pull && ./update.sh &&  mkdir -p /var/log/supervisor /var/run/sshd/
+RUN git pull && ./update.sh && mkdir -p /var/log/supervisor /var/run/sshd/
 RUN ./bin/pip install supervisord-dependent-startup && sed -i '/^\[include\]/i [eventlistener:dependentstartup]\ncommand=python -m supervisord_dependent_startup\nautostart=true\nautorestart=unexpected\nstartretries=0\nexitcodes=0,3\nevents=PROCESS_STATE\n' /etc/supervisor/supervisord.conf
 
 # Download Dockerize
