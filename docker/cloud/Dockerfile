@@ -2,7 +2,7 @@
 
 FROM ubuntu:20.04
 LABEL maintainer="Anielkis Herrera <aherrera@zato.io>, Dariusz Suchojad <dsuch@zato.io>"
-LABEL Description="Zato's Docker image for cloud environments" Version="3.2.0"
+LABEL Description="Zato Docker image for cloud environments" Version="3.2.0"
 
 ENV ZATO_BIN /opt/zato/current/bin/zato
 ENV TZ=GMT
@@ -15,7 +15,10 @@ RUN apt-get update&& DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN
     git \
     libcurl4-openssl-dev \
     software-properties-common \
-    supervisor
+    supervisor \
+    libsasl2-dev \
+    libldap2-dev \
+    libssl-dev
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/* && apt-get update -y
@@ -29,7 +32,7 @@ RUN curl -s https://zato.io/repo/zato-3.2-48849AAD40BCBB0E.pgp.txt | apt-key add
 
 # Add Zato repo and install the package
 # update sources and install Zato
-RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main" && apt-get update && apt-get install -y zato
+RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main" && apt-get update && apt-get install -y zato libsasl2-dev libldap2-dev libssl-dev
 
 # Download Dockerize
 ENV DOCKERIZE_VERSION v0.11.8
