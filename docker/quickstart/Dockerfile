@@ -42,7 +42,7 @@ RUN curl -s https://zato.io/repo/zato-3.2-48849AAD40BCBB0E.pgp.txt | sudo apt-ke
 # Add Zato repo and install the package
 # update sources and install Zato
 # ENV ZATO_PY_VERSION=$zato_py_version
-RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main" && apt-get update && apt-get install -y zato
+RUN add-apt-repository "deb [arch=amd64] https://zato.io/repo/stable/3.2/ubuntu $(lsb_release -cs) main" && apt-get update && apt-get install -y zato libsasl2-dev libldap2-dev libssl-dev
 
 # Install latest updates
 WORKDIR /opt/zato/current
@@ -56,7 +56,7 @@ RUN curl -sfL https://github.com/powerman/dockerize/releases/download/${DOCKERIZ
 # Install gosu for easy step-down from root
 ENV GOSU_VERSION 1.12
 RUN set -x \
-    && apt-get update && apt-get install -y --no-install-recommends ca-certificates wget && rm -rf /var/lib/apt/lists/* \
+    && apt-get update && apt-get install -y --no-install-recommends ca-certificates wget libsasl2-dev libldap2-dev libssl-dev && rm -rf /var/lib/apt/lists/* \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
