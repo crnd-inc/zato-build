@@ -78,8 +78,8 @@ case "$ZATO_POSITION" in
             echo "Checking ODB status before"
             QUERY="\dt"
             if [[ -z "$(PGPASSWORD=${ODB_PASSWORD} psql --command="${QUERY}" --host=${ODB_HOSTNAME} --port=${ODB_PORT} --username=${ODB_USERNAME} ${ODB_NAME} |grep -v 'Did not find any relations'|grep ' | table | ')" ]]; then
-                echo "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} ${ODB_TYPE}"
-                gosu zato bash -c "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} ${ODB_TYPE}"
+                echo "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} --odb_type ${ODB_TYPE}"
+                gosu zato bash -c "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} --odb_type ${ODB_TYPE}"
             else
                 echo "ODB was created before"
             fi
@@ -98,8 +98,8 @@ case "$ZATO_POSITION" in
             echo "Checking ODB status"
             QUERY="show tables"
             if [[ "$(mysql --host=${ODB_HOSTNAME} --port=${ODB_PORT} -u ${ODB_USERNAME} -p${ODB_PASSWORD} ${ODB_NAME} --disable-column-names -B -e "${QUERY}" | wc -l)" == "0" ]]; then
-                echo "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} ${ODB_TYPE}"
-                gosu zato bash -c "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} ${ODB_TYPE}"
+                echo "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} --odb_type ${ODB_TYPE}"
+                gosu zato bash -c "${ZATO_BIN} create odb ${OPTIONS} ${ODB_DATA} --odb_type ${ODB_TYPE}"
             else
                 echo "ODB was created"
             fi
